@@ -11,10 +11,19 @@ import {
 
 import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
-import Icons from 'react-native-vector-icons/Ionicons';
+import Icons from 'react-native-vector-icons/Feather';
 import * as RNFS from 'react-native-fs';
 import React, {useState, useEffect} from 'react';
-import {settext, setemail, setpincode, setmobile} from '../Redux/action';
+import {
+  settext,
+  setemail,
+  setpincode,
+  setmobile,
+  setaccname,
+  setaccnum,
+  setifsc,
+  setnumber,
+} from '../Redux/action';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import SwitchSelector from 'react-native-switch-selector';
@@ -39,9 +48,13 @@ export default function Detail() {
 
   const [accType, setAcctype] = useState('Saving');
 
-  const {text, email, mobile, pincode} = useSelector(
-    state => state.userReducer,
-  );
+  const [accountuser, setaccountuser] = useState('');
+  const [accountnum, setaccountnum] = useState('');
+  const [accountmbl, setaccountmbl] = useState('');
+  const [accountifsc, setaccountifsc] = useState('');
+
+  const {text, email, mobile, pincode, accname, accnum, number, ifsc} =
+    useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
   const Submit = () => {
@@ -74,6 +87,7 @@ export default function Detail() {
     dispatch(setemail(Useremail));
     dispatch(setpincode(Userpincode));
     dispatch(setmobile(Usermobile));
+
     console.log(text, email, mobile, pincode);
   };
   const handle = () => {
@@ -87,6 +101,14 @@ export default function Detail() {
       setproof(false);
       setdetail(false);
     }
+  };
+
+  const accountData = () => {
+    dispatch(setaccname(accountuser));
+    dispatch(setaccnum(accountnum));
+    dispatch(setnumber(accountmbl));
+    dispatch(setifsc(accountifsc));
+    console.log(accname, accnum, ifsc, number);
   };
   //camera
 
@@ -113,7 +135,7 @@ export default function Detail() {
   // }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView>
       {proof ? (
         <ScrollView>
           <Text
@@ -126,71 +148,127 @@ export default function Detail() {
             Upload KYC{' '}
           </Text>
 
-          <View style={{flexDirection:"row"}}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{padding: 10}}>
+              <Text style={{color: '#64b35b', fontWeight: '700', padding: 10}}>
+                Personal Deatils
+              </Text>
+              <View
+                style={{
+                  width: 110,
+                  height: 10,
+                  backgroundColor: '#64b35b',
+                  borderRadius: 20,
+                }}></View>
+            </View>
+            <View style={{padding: 10}}>
+              <Text style={{color: '#64b35b', fontWeight: '700', padding: 10}}>
+                ID Proof
+              </Text>
+              <View
+                style={{
+                  width: 100,
+                  height: 10,
+                  backgroundColor: '#64b35b',
+                  borderRadius: 20,
+                }}></View>
+            </View>
+            <View style={{padding: 10}}>
+              <Text style={{color: 'grey', fontWeight: '700', padding: 10}}>
+                Bank Deatil
+              </Text>
+              <View
+                style={{
+                  width: 100,
+                  height: 10,
+                  backgroundColor: 'grey',
+                  borderRadius: 20,
+                }}></View>
+            </View>
+          </View>
+
+          <View style={styles.container}>
+            <View style={{marginLeft: 5}}>
+              <Text style={styles.detail}>Choose Document Type</Text>
+            <View style={styles.buttonContainers}>
+                <View style={{padding: 8}}>
+                  <TouchableOpacity
+                    style={[
+                      styles.appButton,
+                      {
+                        backgroundColor:
+                          accType == 'Savings' ? '#64b35b' : '#A9A9A9',
+                      },
+                    ]}>
+                    <Text style={styles.apptext}>Aadhar Card</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{padding: 8}}>
+                  <TouchableOpacity
+                    style={[
+                      styles.appButton,
+                      {
+                        backgroundColor:
+                          accType == 'Saving' ? '#64b35b' : '#A9A9A9',
+                      },
+                    ]}
+                    onPress={() => setAcctype('Saving')}>
+                    <Text style={styles.apptext}> Pan Card</Text>
+                  </TouchableOpacity>
+                </View>
+           
+              </View>
+              <View style={{padding: 8,marginLeft:8}}>
+                  <TouchableOpacity
+                    style={[
+                      styles.appButton,
+                      {
+                        backgroundColor:
+                          accType == 'Current' ? '#64b35b' : '#A9A9A9',
+                      },
+                    ]}
+                    onPress={() => setAcctype('Current')}>
+                    <Text style={styles.apptext}>DrivingLicense</Text>
+                  </TouchableOpacity>
+                </View>
+              <Text style={[styles.detail,{marginLeft:10}]}>Card Id Proof</Text>
+              <Text style={styles.texts}>
+                After successful login, the user will select File Upload from
+                the main menu and upload the input file
+              </Text>
+              <View style={{flexDirection:"row"}}>
+              <View style={styles.cameraContainer}>
+              <TouchableOpacity>
+               <Icons name="camera" color='#64b35b' size={60}   style={{marginLeft:40,marginRight:40,marginTop:40}} />
+   </TouchableOpacity>
+   <Text style={styles.camera}>
+    Front
+   </Text>
+   
+              </View>
+              <View style={styles.cameraContainer}>
+              <TouchableOpacity>
+               <Icons name="camera" color='#64b35b' size={60}    style={{marginLeft:40,marginRight:40,marginTop:40 }} />
+   </TouchableOpacity>
+   <Text style={styles.camera}>
+    Back
+   </Text>
+   
+              </View>
+
+              </View>
             
-            <View style={{padding:10}}>
-              <Text style={{color:"#64b35b",fontWeight:"700",padding:10}}>
-              Personal Deatils
-              </Text>
-              <View style={{width:110,height:10,backgroundColor:"#64b35b",borderRadius:20}}></View>
-            </View>
-            <View style={{padding:10}}>
-              <Text style={{color:"#64b35b",fontWeight:"700",padding:10}}>
-             ID Proof
-              </Text>
-              <View style={{width:100,height:10,backgroundColor:"#64b35b",borderRadius:20}}></View>
-            </View>
-            <View style={{padding:10}}>
-              <Text style={{color:"grey",fontWeight:"700",padding:10}}>
-              Bank Deatil
-              </Text>
-              <View style={{width:100,height:10,backgroundColor:"grey",borderRadius:20}}></View>
-            </View>
-  
-            </View>
-        
 
-          <Text style={styles.detail}>Choose Document Type</Text>
+              <View style={{margin:8,}}>
+                <TouchableOpacity
+                  style={styles.appButtonContainer}
+                  onPress={data}>
+                  <Text style={styles.appButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-          <View style={styles.buttonContainers}>
-            <View style={{padding: 8}}>
-              <TouchableOpacity style={[styles.appButton, {backgroundColor: accType == 'Savings' ? 'green' : '#A9A9A9'},]}>
-                <Text style={styles.apptext}>Aadhar Card</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{padding: 8}}>
-              <TouchableOpacity
-                style={[
-                  styles.appButton,
-                  {backgroundColor: accType == 'Saving' ? 'green' : '#A9A9A9'},
-                ]}
-                onPress={() => setAcctype('Saving')}>
-                <Text style={styles.apptext}> Pan Card</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{padding: 8}}>
-              <TouchableOpacity
-                style={[
-                  styles.appButton,
-                  {backgroundColor: accType == 'Current' ? 'green' : '#A9A9A9'},
-                ]}
-                onPress={() => setAcctype('Current')}>
-                <Text style={styles.apptext}>DrivingLicense</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <Text style={styles.detail}>Card Id Proof</Text>
-          <Text style={styles.texts}>
-            After successful login, the user will select File Upload from the
-            main menu and upload the input file
-          </Text>
-          <View style={{marginTop:100,marginLeft:10}}>
-          <TouchableOpacity style={styles.appButtonContainer} onPress={data}>
-            <Text style={styles.appButtonText}>Next</Text>
-          </TouchableOpacity>
-          </View>
-         
-          {/* <ScrollView style={styles.body}>
+            {/* <ScrollView style={styles.body}>
         {
             front ? (
                 <RNCamera
@@ -228,7 +306,7 @@ export default function Detail() {
                     color='#1eb900'
                     onPress={() => captureHandle()}
                 />  */}
-          {/* </RNCamera>
+            {/* </RNCamera>
             ):(
                 <RNCamera
                 ref={cameraRef}
@@ -264,6 +342,7 @@ export default function Detail() {
 
         }
         </View>  */}
+          </View>
         </ScrollView>
       ) : bank ? (
         <View>
@@ -276,31 +355,47 @@ export default function Detail() {
             }}>
             Upload KYC{' '}
           </Text>
-          <View style={{flexDirection:"row"}}>
-            
-            <View style={{padding:10}}>
-              <Text style={{color:"#64b35b",fontWeight:"700",padding:10}}>
-              Personal Deatils
+          <View style={{flexDirection: 'row'}}>
+            <View style={{padding: 10}}>
+              <Text style={{color: '#64b35b', fontWeight: '700', padding: 10}}>
+                Personal Deatils
               </Text>
-              <View style={{width:110,height:10,backgroundColor:"#64b35b",borderRadius:20}}></View>
+              <View
+                style={{
+                  width: 110,
+                  height: 10,
+                  backgroundColor: '#64b35b',
+                  borderRadius: 20,
+                }}></View>
             </View>
-            <View style={{padding:10}}>
-              <Text style={{color:"#64b35b",fontWeight:"700",padding:10}}>
-             ID Proof
+            <View style={{padding: 10}}>
+              <Text style={{color: '#64b35b', fontWeight: '700', padding: 10}}>
+                ID Proof
               </Text>
-              <View style={{width:100,height:10,backgroundColor:"#64b35b",borderRadius:20}}></View>
+              <View
+                style={{
+                  width: 100,
+                  height: 10,
+                  backgroundColor: '#64b35b',
+                  borderRadius: 20,
+                }}></View>
             </View>
-            <View style={{padding:10}}>
-              <Text style={{color:"#64b35b",fontWeight:"700",padding:10}}>
-              Bank Deatil
+            <View style={{padding: 10}}>
+              <Text style={{color: '#64b35b', fontWeight: '700', padding: 10}}>
+                Bank Deatil
               </Text>
-              <View style={{width:100,height:10,backgroundColor:"#64b35b",borderRadius:20}}></View>
+              <View
+                style={{
+                  width: 100,
+                  height: 10,
+                  backgroundColor: '#64b35b',
+                  borderRadius: 20,
+                }}></View>
             </View>
-  
-            </View>
-        
+          </View>
+
           <View style={[styles.container, {margin: 15}]}>
-            <Text style={styles.heading}>Enter Your Account Details</Text>
+            <Text style={styles.detail}>Enter Your Account Details</Text>
             <View style={styles.buttonContainers}>
               <TouchableOpacity style={styles.appButtonContainers}>
                 <Text style={styles.appButtonTexts}>Account Type</Text>
@@ -308,7 +403,10 @@ export default function Detail() {
               <TouchableOpacity
                 style={[
                   styles.appButtonContainers,
-                  {backgroundColor: accType == 'Saving' ? 'green' : '#A9A9A9'},
+                  {
+                    backgroundColor:
+                      accType == 'Saving' ? '#64b35b' : '#A9A9A9',
+                  },
                 ]}
                 onPress={() => setAcctype('Saving')}>
                 <Text style={styles.appButtonTexts}>Saving </Text>
@@ -316,46 +414,58 @@ export default function Detail() {
               <TouchableOpacity
                 style={[
                   styles.appButtonContainers,
-                  {backgroundColor: accType == 'Current' ? 'green' : '#A9A9A9'},
+                  {
+                    backgroundColor:
+                      accType == 'Current' ? '#64b35b' : '#A9A9A9',
+                  },
                 ]}
                 onPress={() => setAcctype('Current')}>
                 <Text style={styles.appButtonTexts}>Current</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.text}>UserName</Text>
-            <TextInput
-              placeholder="Account UserName"
-              style={styles.input}
-              // onChangeText={(value) => setUserName(value)}
-              //value={userName}
-            />
-            <Text style={styles.text}>Acc Number</Text>
-            <TextInput
-              placeholder="Account Number"
-              style={styles.input}
-              // onChangeText={(value) => setUserName(value)}
-              //value={userName}
-            />
-            <Text style={styles.text}>Mobile Number</Text>
-            <TextInput
-              placeholder="Mobile Number"
-              style={styles.input}
-              // onChangeText={(value) => setUserName(value)}
-              //value={userName}
-            />
-            <Text style={styles.text}>IFSC Code</Text>
-            <TextInput
-              placeholder="IFSC Code"
-              style={styles.input}
-              // onChangeText={(value) => setUserName(value)}
-              //value={userName}
-            />
-            <View style={{marginLeft: 20,paddingBottom:10}}>
-              <TouchableOpacity
-                style={styles.appButtonContainer}
-                onPress={() => console.log("Data Submited")}>
-                <Text style={styles.appButtonText}>Submit</Text>
-              </TouchableOpacity>
+            <View style={{marginLeft: 10}}>
+              <Text style={styles.text}>UserName</Text>
+              <TextInput
+                placeholder="Account UserName"
+                style={styles.input}
+                onChangeText={setaccountuser}
+                maxLength={10}
+                value={accountuser}
+              />
+              <Text style={styles.text}>Acc Number</Text>
+              <TextInput
+                placeholder="Account Number"
+                style={styles.input}
+                keyboardType="numeric"
+                onChangeText={setaccountnum}
+                maxLength={15}
+                value={accountnum}
+              />
+              <Text style={styles.text}>Mobile Number</Text>
+              <TextInput
+                placeholder="Mobile Number"
+                style={styles.input}
+                keyboardType="numeric"
+                onChangeText={setaccountmbl}
+                maxLength={10}
+                value={accountmbl}
+              />
+              <Text style={styles.text}>IFSC Code</Text>
+              <TextInput
+                placeholder="IFSC Code"
+                style={styles.input}
+                keyboardType="twitter"
+                onChangeText={setaccountifsc}
+                maxLength={10}
+                value={accountifsc}
+              />
+              <View style={{paddingBottom: 10}}>
+                <TouchableOpacity
+                  style={styles.appButtonContainer}
+                  onPress={accountData}>
+                  <Text style={styles.appButtonText}>Submit</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -370,27 +480,43 @@ export default function Detail() {
             }}>
             Upload KYC
           </Text>
-          <View style={{flexDirection:"row"}}>
-            
-          <View style={{padding:10}}>
-            <Text style={{color:"#64b35b",fontWeight:"700",padding:10}}>
-            Personal Deatils
-            </Text>
-            <View style={{width:110,height:10,backgroundColor:"#64b35b",borderRadius:20}}></View>
-          </View>
-          <View style={{padding:10}}>
-            <Text style={{color:"grey",fontWeight:"700",padding:10}}>
-           ID Proof
-            </Text>
-            <View style={{width:100,height:10,backgroundColor:"grey",borderRadius:20}}></View>
-          </View>
-          <View style={{padding:10}}>
-            <Text style={{color:"grey",fontWeight:"700",padding:10}}>
-            Bank Deatil
-            </Text>
-            <View style={{width:100,height:10,backgroundColor:"grey",borderRadius:20}}></View>
-          </View>
-
+          <View style={{flexDirection: 'row'}}>
+            <View style={{padding: 10}}>
+              <Text style={{color: '#64b35b', fontWeight: '700', padding: 10}}>
+                Personal Deatils
+              </Text>
+              <View
+                style={{
+                  width: 110,
+                  height: 10,
+                  backgroundColor: '#64b35b',
+                  borderRadius: 20,
+                }}></View>
+            </View>
+            <View style={{padding: 10}}>
+              <Text style={{color: 'grey', fontWeight: '700', padding: 10}}>
+                ID Proof
+              </Text>
+              <View
+                style={{
+                  width: 100,
+                  height: 10,
+                  backgroundColor: 'grey',
+                  borderRadius: 20,
+                }}></View>
+            </View>
+            <View style={{padding: 10}}>
+              <Text style={{color: 'grey', fontWeight: '700', padding: 10}}>
+                Bank Deatil
+              </Text>
+              <View
+                style={{
+                  width: 100,
+                  height: 10,
+                  backgroundColor: 'grey',
+                  borderRadius: 20,
+                }}></View>
+            </View>
           </View>
           {/* <SwitchSelector
             options={options}
@@ -400,49 +526,50 @@ export default function Detail() {
             onPress={handle}
             initial={0}
           /> */}
-
-          <View style={{padding: 10}}>
-            <Text style={styles.detail}>Enter Your Details</Text>
-            <Text style={styles.text}>Name</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setUserText}
-              value={Usertext}
-              clearButtonMode="always"
-              placeholder="name"
-            />
-            <Text style={styles.text}>Mobile</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setUsermobile}
-              keyboardType="phone-pad"
-              maxLength={10}
-              value={Usermobile}
-              placeholder="Mobile"
-            />
-            <Text style={styles.text}>Email</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setUseremail}
-              keyboardType="email-address"
-              value={Useremail}
-              placeholder="Email"
-            />
-            <Text style={styles.text}>Pincode</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setUserpincode}
-              keyboardType="numeric"
-              maxLength={6}
-              value={Userpincode}
-              placeholder="Pincode"
-            />
-            <View style={{marginLeft: 20}}>
-              <TouchableOpacity
-                style={styles.appButtonContainer}
-                onPress={Submit}>
-                <Text style={styles.appButtonText}>Next</Text>
-              </TouchableOpacity>
+          <View style={styles.container}>
+            <View style={{padding: 10, marginLeft: 10}}>
+              <Text style={styles.detail}>Enter Your Details</Text>
+              <Text style={styles.text}>Name</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setUserText}
+                value={Usertext}
+                clearButtonMode="always"
+                placeholder="name"
+              />
+              <Text style={styles.text}>Mobile</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setUsermobile}
+                keyboardType="phone-pad"
+                maxLength={10}
+                value={Usermobile}
+                placeholder="Mobile"
+              />
+              <Text style={styles.text}>Email</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setUseremail}
+                keyboardType="email-address"
+                value={Useremail}
+                placeholder="Email"
+              />
+              <Text style={styles.text}>Pincode</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setUserpincode}
+                keyboardType="numeric"
+                maxLength={6}
+                value={Userpincode}
+                placeholder="Pincode"
+              />
+              <View style={{marginLeft: 10}}>
+                <TouchableOpacity
+                  style={styles.appButtonContainer}
+                  onPress={Submit}>
+                  <Text style={styles.appButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -463,9 +590,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginTop: 10,
-    marginLeft: 20,
+    marginLeft: 10,
     backgroundColor: 'white',
-    padding: 10,
+    paddingTop: 10,
   },
   input: {
     width: 300,
@@ -482,9 +609,9 @@ const styles = StyleSheet.create({
   },
   texts: {
     fontWeight: 'bold',
-    marginLeft: 10,
-    paddingTop: -10,
-    paddingLeft: 20,
+    marginLeft: 4,
+    paddingTop: 10,
+    paddingLeft: 10,
     fontSize: 15,
     letterSpacing: 0.5,
     lineHeight: 20,
@@ -531,15 +658,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 10,
     elevation: 8,
-    backgroundColor: '#A9A9A9',
+    backgroundColor: '#c6c6c6',
     borderRadius: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    height: 30,
-    width: 80,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    height: 40,
+    width: 100,
   },
   appButtonTexts: {
-    fontSize: 10,
+    fontSize: 12,
+    fontWeight: 'bold',
     color: '#fff',
     alignSelf: 'center',
     justifyContent: 'center',
@@ -560,4 +688,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  camera:{
+    fontSize:16,
+    fontWeight:"600",
+    // margin:10,
+    marginLeft:55,
+    marginTop:20
+  },
+  cameraContainer:{
+    backgroundColor:"#F5F5DC",
+    margin:10,
+    marginLeft:10,
+    padding:10,
+    borderRadius:25,
+  }
 });
