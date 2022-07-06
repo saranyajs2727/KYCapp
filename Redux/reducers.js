@@ -1,4 +1,4 @@
-import { SET_USER_NAME, SET_EMAIL, SET_MOBILE,SET_PINCODE,SET_ACCNAME,SET_ACCNUM,SET_NUMBER,SET_IFSC} from "./action";
+import { SET_USER_NAME, SET_EMAIL, SET_MOBILE,SET_PINCODE,SET_ACCNAME,SET_ACCNUM,SET_NUMBER,SET_IFSC, SET_IMAGE} from "./action";
 
 const initialState = {
     name:'',
@@ -9,6 +9,7 @@ const initialState = {
     accnum:'',
     number:'',
     ifsc:'',
+    img:'',
 }
 
 function userReducer(state = initialState, action) {
@@ -29,6 +30,8 @@ function userReducer(state = initialState, action) {
             return { ...state, number: action.payload }
         case SET_IFSC:
             return { ...state, ifsc: action.payload }
+         case SET_IMAGE:
+                return { ...state, img: action.payload }
         default:
             return state;
     }

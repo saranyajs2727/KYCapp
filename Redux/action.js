@@ -6,6 +6,7 @@ export const SET_ACCNAME = 'SET_ACCNAME';
 export const SET_ACCNUM = 'SET_ACCNUM';
 export const SET_NUMBER = 'SET_NUMBER';
 export const SET_IFSC = 'SET_IFSC';
+export const SET_IMAGE = 'IMAGE';
 export const settext = text => ({
         type: SET_USER_NAME,
         payload: text,
@@ -42,5 +43,11 @@ export const setpincode= pincode => ({
         type: SET_IFSC,
         payload: ifsc,
     });
+    export const setimg= img => ({
+        type: SET_IMAGE,
+        payload: img,
+    });
+
+
 
 

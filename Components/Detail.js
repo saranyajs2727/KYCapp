@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  Image,
 } from 'react-native';
 
 import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
 import Icons from 'react-native-vector-icons/Feather';
+import ImagePicker from 'react-native-image-crop-picker';
 import * as RNFS from 'react-native-fs';
 import React, {useState, useEffect} from 'react';
 import {
@@ -23,6 +25,7 @@ import {
   setaccnum,
   setifsc,
   setnumber,
+  setimg
 } from '../Redux/action';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -48,12 +51,14 @@ export default function Detail() {
 
   const [accType, setAcctype] = useState('Saving');
 
+  const [image, setimage] = useState('');
+
   const [accountuser, setaccountuser] = useState('');
   const [accountnum, setaccountnum] = useState('');
   const [accountmbl, setaccountmbl] = useState('');
   const [accountifsc, setaccountifsc] = useState('');
 
-  const {text, email, mobile, pincode, accname, accnum, number, ifsc} =
+  const {text, email, mobile, pincode, accname, accnum, number, ifsc,img} =
     useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
@@ -64,8 +69,14 @@ export default function Detail() {
     const strongRegex = new RegExp(
       '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$',
     );
+    const phoneno = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+
     if (!strongRegex.test(Useremail)) {
       alert('please enter a valid email address');
+      console.log('kjk');
+    }
+    if (!phoneno.test(Usermobile)) {
+      alert('please enter a valid number');
       console.log('kjk');
     }
     if (
@@ -109,7 +120,28 @@ export default function Detail() {
     dispatch(setnumber(accountmbl));
     dispatch(setifsc(accountifsc));
     console.log(accname, accnum, ifsc, number);
+    console.log("submitted");
   };
+
+  // image picker
+
+  const ImageCall = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image1 => {
+        setimage(image1);
+        // console.log(image);
+        dispatch(setimg(image));
+        console.log(img);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   //camera
 
   // const [front, setfront] = useState(false)
@@ -144,6 +176,7 @@ export default function Detail() {
               fontSize: 30,
               fontWeight: '700',
               color: 'black',
+              marginLeft: 8,
             }}>
             Upload KYC{' '}
           </Text>
@@ -190,7 +223,7 @@ export default function Detail() {
           <View style={styles.container}>
             <View style={{marginLeft: 5}}>
               <Text style={styles.detail}>Choose Document Type</Text>
-            <View style={styles.buttonContainers}>
+              <View style={styles.buttonContainers}>
                 <View style={{padding: 8}}>
                   <TouchableOpacity
                     style={[
@@ -216,50 +249,55 @@ export default function Detail() {
                     <Text style={styles.apptext}> Pan Card</Text>
                   </TouchableOpacity>
                 </View>
-           
               </View>
-              <View style={{padding: 8,marginLeft:8}}>
-                  <TouchableOpacity
-                    style={[
-                      styles.appButton,
-                      {
-                        backgroundColor:
-                          accType == 'Current' ? '#64b35b' : '#A9A9A9',
-                      },
-                    ]}
-                    onPress={() => setAcctype('Current')}>
-                    <Text style={styles.apptext}>DrivingLicense</Text>
-                  </TouchableOpacity>
-                </View>
-              <Text style={[styles.detail,{marginLeft:10}]}>Card Id Proof</Text>
+              <View style={{padding: 8, marginLeft: 8}}>
+                <TouchableOpacity
+                  style={[
+                    styles.appButton,
+                    {
+                      backgroundColor:
+                        accType == 'Current' ? '#64b35b' : '#A9A9A9',
+                    },
+                  ]}
+                  onPress={() => setAcctype('Current')}>
+                  <Text style={styles.apptext}>DrivingLicense</Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={[styles.detail, {marginLeft: 10}]}>
+                Card Id Proof
+              </Text>
               <Text style={styles.texts}>
                 After successful login, the user will select File Upload from
                 the main menu and upload the input file
               </Text>
-              <View style={{flexDirection:"row"}}>
-              <View style={styles.cameraContainer}>
-              <TouchableOpacity>
-               <Icons name="camera" color='#64b35b' size={60}   style={{marginLeft:40,marginRight:40,marginTop:40}} />
-   </TouchableOpacity>
-   <Text style={styles.camera}>
-    Front
-   </Text>
-   
-              </View>
-              <View style={styles.cameraContainer}>
-              <TouchableOpacity>
-               <Icons name="camera" color='#64b35b' size={60}    style={{marginLeft:40,marginRight:40,marginTop:40 }} />
-   </TouchableOpacity>
-   <Text style={styles.camera}>
-    Back
-   </Text>
-   
+              <View style={{flexDirection: 'row'}}>
+                <View style={styles.cameraContainer}>
+                  <TouchableOpacity>
+                    <Icons
+                      name="camera"
+                      color="#64b35b"
+                      size={60}
+                      style={{marginLeft: 40, marginRight: 40, marginTop: 40}}
+                      onPress={ImageCall}
+                    />
+                  </TouchableOpacity>
+                  <Text style={styles.camera}>Front</Text>
+                </View>
+                <View style={styles.cameraContainer}>
+                  <TouchableOpacity>
+                    <Icons
+                      name="camera"
+                      color="#64b35b"
+                      size={60}
+                      style={{marginLeft: 40, marginRight: 40, marginTop: 40}}
+                      onPress={ImageCall}
+                    />
+                  </TouchableOpacity>
+                  <Text style={styles.camera}>Back</Text>
+                </View>
               </View>
 
-              </View>
-            
-
-              <View style={{margin:8,}}>
+              <View style={{margin: 8}}>
                 <TouchableOpacity
                   style={styles.appButtonContainer}
                   onPress={data}>
@@ -566,7 +604,8 @@ export default function Detail() {
               <View style={{marginLeft: 10}}>
                 <TouchableOpacity
                   style={styles.appButtonContainer}
-                  onPress={Submit}>
+                  onPress={Submit}
+                  >
                   <Text style={styles.appButtonText}>Next</Text>
                 </TouchableOpacity>
               </View>
@@ -688,18 +727,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  camera:{
-    fontSize:16,
-    fontWeight:"600",
+  camera: {
+    fontSize: 16,
+    fontWeight: '600',
     // margin:10,
-    marginLeft:55,
-    marginTop:20
+    marginLeft: 55,
+    marginTop: 20,
   },
-  cameraContainer:{
-    backgroundColor:"#F5F5DC",
-    margin:10,
-    marginLeft:10,
-    padding:10,
-    borderRadius:25,
-  }
+  cameraContainer: {
+    backgroundColor: '#F5F5DC',
+    // margin:5,
+    marginLeft: 20,
+    padding: 4,
+    borderRadius: 25,
+  },
 });
